@@ -17,6 +17,11 @@ declare global {
 		time_created: number;
 		time_updated: number;
 	};
+	type Category = {
+		id: string;
+		name: string;
+		time_created: number;
+	};
 }
 
 export {};

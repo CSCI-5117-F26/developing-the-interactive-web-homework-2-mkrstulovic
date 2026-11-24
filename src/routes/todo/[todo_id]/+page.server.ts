@@ -5,7 +5,7 @@ import { getRequestEvent } from '$app/server';
 
 export const load: PageServerLoad = async ({ params }) => {
   try {
-    const { todo_id } = params
+    const { todo_id } = params;
     const event = getRequestEvent();
     const user = event.locals.user;
     const foundUser = await db.collection("user").findOne({email: user.email})

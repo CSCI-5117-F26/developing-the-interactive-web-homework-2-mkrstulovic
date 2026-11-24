@@ -2,6 +2,8 @@
   import { authClient } from "#lib/auth.client.ts";
 	import { goto } from "$app/navigation";
 	import { resolve } from "$app/paths";
+  import CategoryFilter from "#lib/CategoryFilter.svelte";
+  let catFilter: CategoryFilter;
   const session = authClient.useSession();
   const {data} = $props()
   console.log(data)
@@ -41,6 +43,9 @@
 <h1>TODOS</h1>
 <h2>Hello {$session?.data?.user?.name}</h2>
 <a href="/done">See Completed To-Do Items</a>
+
+<CategoryFilter bind:this={catFilter} base_url={'todos'} />
+<button onclick={() => catFilter.reload()}> Refresh categories </button>
 
 <input type='textarea' placeholder="Add a new to-do item here..." bind:value={todo_to_add} />
 <button onclick={add_todo} >Add New To-Do</button>
