@@ -8,6 +8,15 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+
+	type Todo = {
+		id: string;
+		desc: string;
+		done: boolean;
+		category: string | null;
+		time_created: number;
+		time_updated: number;
+	};
 }
 
 export {};

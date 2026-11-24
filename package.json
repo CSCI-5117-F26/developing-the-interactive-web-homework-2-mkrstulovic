@@ -27,5 +27,11 @@
 		"svelte-check": "^4.7.8",
 		"typescript": "^6.0.3",
 		"vite": "^8.3.8"
+	},
+	"dependencies": {
+		"@better-auth/mongo-adapter": "^1.7.28",
+		"@vercel/functions": "^3.11.3",
+		"better-auth": "^1.7.28",
+		"mongodb": "^7.9.1"
 	}
 }
