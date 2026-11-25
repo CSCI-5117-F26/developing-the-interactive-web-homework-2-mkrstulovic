@@ -46,7 +46,7 @@
 <CategoryFilter bind:this={catFilter} base_url={'todos'} />
 <button onclick={() => catFilter.reload()}> Refresh categories </button>
 
-<input type='textarea' placeholder="Add a new to-do item here..." bind:value={todo_to_add} />
+<input type='textarea' placeholder="Add a new to-do item here..." maxlength="500" bind:value={todo_to_add} />
 <button onclick={add_todo} >Add New To-Do</button>
 {#if todos.length > 0}
 <table>

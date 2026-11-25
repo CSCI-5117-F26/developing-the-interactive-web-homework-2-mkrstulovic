@@ -1,6 +1,7 @@
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { db, EJSON } from '#lib/mongo.server.ts';
+import { readJsonBody, requireText, MAX_CATEGORY_LENGTH } from '#lib/validation.server.ts';
 
 const users = db.collection('user');
 
@@ -16,9 +17,8 @@ export const GET: RequestHandler = async ({ locals }) => {
 };
 
 export const POST: RequestHandler = async ({ request, locals }) => {
-	const { name } = await request.json();
-	const trimmed = typeof name === 'string' ? name.trim() : '';
-	if (!trimmed) error(400, 'Category Name required');
+	const { name } = await readJsonBody(request);
+	const trimmed = requireText(name, 'Category name', MAX_CATEGORY_LENGTH);
 
 	const category: Category = {
 		id: crypto.randomUUID(),
@@ -42,8 +42,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 };
 
 export const DELETE: RequestHandler = async ({ request, locals }) => {
-	const { name } = await request.json();
-	if (typeof name !== 'string' || !name) error(400, 'Category Name required');
+	const body = await readJsonBody(request);
+	const name = requireText(body.name, 'Category name', MAX_CATEGORY_LENGTH);
 
 	const update = {} as any;
 	update['$pull'] = { 'created_categories': { name } };

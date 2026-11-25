@@ -3,7 +3,16 @@
 declare global {
 	namespace App {
 		// interface Error {}
-		// interface Locals {}
+		interface Locals {
+			user: {
+				id: string;
+				name: string;
+				email: string;
+				created_categories: Category[];
+				todos: Todo[];
+				// add other user fields here
+			};
+		}
 		// interface PageData {}
 		// interface PageState {}
 		// interface Platform {}

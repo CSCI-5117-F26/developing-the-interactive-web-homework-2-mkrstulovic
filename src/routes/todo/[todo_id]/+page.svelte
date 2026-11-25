@@ -1,9 +1,9 @@
 <script lang="ts">
   const {data} = $props();
-  const todo = $state(data.todos);
-  const categories = $state(data.categories);
+  const todo = $derived(data.todos);
+  const categories = $derived(data.categories);
 
-  const options = categories.map((cat: Category) => cat.name);
+  const options = $derived(categories.map((cat: Category) => cat.name));
 
   async function edit_todo() {
     const res = await fetch(`/todo/${todo.id}`, {
@@ -15,7 +15,7 @@
   }
 </script>
 <a href="/todos">Return to To-Do List</a>
-<input type='textarea' placeholder="Enter to-do text here..." bind:value={todo.desc} />
+<input type='textarea' placeholder="Enter to-do text here..." maxlength="500" bind:value={todo.desc} />
 <input type='checkbox' bind:checked={todo.done} />
 <select name='category' id='cat' bind:value={todo.category}>
   <option value="" disabled selected>Select a category</option>

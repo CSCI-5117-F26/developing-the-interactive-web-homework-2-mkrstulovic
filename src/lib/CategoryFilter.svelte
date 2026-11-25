@@ -73,7 +73,7 @@
 	<a href='/{base_url}'>Clear Filter</a>
 
 	<form onsubmit={add_category}>
-		<input placeholder="New category..." bind:value={new_category} />
+		<input placeholder="New category..." maxlength="50" bind:value={new_category} />
 		<button type="submit" disabled={!new_category.trim()}>Create</button>
 	</form>
 
