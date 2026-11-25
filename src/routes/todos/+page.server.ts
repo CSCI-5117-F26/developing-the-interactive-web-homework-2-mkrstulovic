@@ -8,7 +8,8 @@ export const load: PageServerLoad = async ({ params }) => {
     const event = getRequestEvent();
     const user = event.locals.user;
     const foundUser = await db.collection("user").findOne({email: user.email});
-    const todos = foundUser?.todos?.filter((todo: Todo) => !todo.done) ?? [];
+    const todos = foundUser?.todos?.filter((todo: Todo) => !todo.done)
+      .sort((a: Todo, b: Todo) => b.time_created - a.time_created) ?? [];
     return {todos: EJSON.serialize(todos) as unknown as Todo[]};
   } catch {
     error(404, 'Not found');

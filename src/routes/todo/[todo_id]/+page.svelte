@@ -1,18 +1,26 @@
 <script lang="ts">
   const {data} = $props();
   const todo = $state(data.todos);
+  const categories = $state(data.categories);
+
+  const options = categories.map((cat: Category) => cat.name);
 
   async function edit_todo() {
-    const res = await fetch(`/todos/${todo.id}`, {
+    const res = await fetch(`/todo/${todo.id}`, {
       method: 'PATCH',
       body: JSON.stringify({edit_todo: todo}),
       headers: { 'Content-Type': 'application/json' }
     });
     const result = await res.json();
-    console.log(result);
   }
 </script>
 <a href="/todos">Return to To-Do List</a>
 <input type='textarea' placeholder="Enter to-do text here..." bind:value={todo.desc} />
 <input type='checkbox' bind:checked={todo.done} />
+<select name='category' id='cat' bind:value={todo.category}>
+  <option value="" disabled selected>Select a category</option>
+  {#each options as opt}
+    <option value={opt}>{opt}</option>
+  {/each}
+</select>
 <button onclick={edit_todo}>Save Changes</button>

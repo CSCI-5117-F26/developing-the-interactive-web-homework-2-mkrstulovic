@@ -6,8 +6,7 @@
   let catFilter: CategoryFilter;
   const session = authClient.useSession();
   const {data} = $props()
-  console.log(data)
-  const todos = $state(data.todos)
+  let todos = $derived(data.todos)
 
 </script>
 

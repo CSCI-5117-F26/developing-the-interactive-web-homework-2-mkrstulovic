@@ -29,13 +29,21 @@
 		e.preventDefault();
 		const name = new_category.trim();
 		if (!name) return;
+		error_msg = '';
+
+		if (categories.some((c) => c.name.toLowerCase() === name.toLowerCase())) {
+			return (error_msg = `A category named "${name}" already exists`);
+		}
 
 		const res = await fetch('/api/categories', {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
+			headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
 			body: JSON.stringify({ name })
 		});
-		if (!res.ok) return (error_msg = 'Could not add category');
+		if (!res.ok) {
+			const body = await res.json().catch(() => null);
+			return (error_msg = body?.message ?? 'Could not add category');
+		}
 
     const result = await res.json();
 		categories.push(result.category);
@@ -43,16 +51,17 @@
 		onchange?.(categories);
 	}
 
-	async function delete_category(id: string) {
+	async function delete_category(name: string) {
+		error_msg = '';
 		const res = await fetch('/api/categories', {
 			method: 'DELETE',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ id })
+			body: JSON.stringify({ name })
 		});
 		if (!res.ok) return (error_msg = 'Could not delete category');
 
-		categories = categories.filter((c) => c.id !== id);
-		await refreshAll(); // re-run page load()s so todos no longer show the deleted category
+		categories = categories.filter((c) => c.name !== name);
+		refreshAll();
 		onchange?.(categories);
 	}
 
@@ -61,6 +70,7 @@
 
 <section>
 	<h3>Categories</h3>
+	<a href='/{base_url}'>Clear Filter</a>
 
 	<form onsubmit={add_category}>
 		<input placeholder="New category..." bind:value={new_category} />
@@ -77,8 +87,8 @@
 		<ul>
 			{#each categories as category (category.id)}
 				<li>
-					<a href='/{base_url}/{category.name}'>{category.name}</a>
-					<button onclick={() => delete_category(category.id)}>Delete</button>
+					<a href='/{base_url}/{encodeURIComponent(category.name)}'>{category.name}</a>
+					<button onclick={() => delete_category(category.name)}>Delete</button>
 				</li>
 			{/each}
 		</ul>

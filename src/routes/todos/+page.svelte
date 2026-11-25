@@ -1,13 +1,12 @@
 <script lang="ts">
   import { authClient } from "#lib/auth.client.ts";
-	import { goto } from "$app/navigation";
+	import { goto, refreshAll } from "$app/navigation";
 	import { resolve } from "$app/paths";
   import CategoryFilter from "#lib/CategoryFilter.svelte";
   let catFilter: CategoryFilter;
   const session = authClient.useSession();
   const {data} = $props()
-  console.log(data)
-  const todos = $state(data.todos)
+  let todos = $derived(data.todos)
 
   let todo_to_add = $state('');
 
@@ -18,7 +17,7 @@
       headers: { 'Content-Type': 'application/json' }
     });
     const result = await res.json();
-    console.log(result);
+    refreshAll();
   }
   async function mark_todo_done(todo_id: String) {
     const res = await fetch(`/todos`, {
@@ -27,7 +26,7 @@
       headers: { 'Content-Type': 'application/json' }
     });
     const result = await res.json();
-    console.log(result);
+    refreshAll();
   }
 </script>
 
@@ -58,7 +57,7 @@
   {#each todos as todo (todo.id) }
   <tr>
     <td><a href="/todo/{todo.id}">{todo.desc}</a></td>
-    <td><button onclick={mark_todo_done(todo.id)}>Mark Complete?</button></td></tr>
+    <td><button onclick={() => mark_todo_done(todo.id)}>Mark Complete?</button></td></tr>
   {/each}
   </tbody>
 </table>

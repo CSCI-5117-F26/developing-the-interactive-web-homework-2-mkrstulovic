@@ -6,7 +6,7 @@ import { getRequestEvent } from '$app/server';
 export const PATCH: RequestHandler = async ({request, params}) => {
     const event = getRequestEvent();
     const user = event.locals.user;
-    const { todo_to_add, mark_done } = await request.json();
+    const { todo_to_add, mark_done, category } = await request.json();
     
     const update = {} as any;
     let result;
@@ -15,7 +15,7 @@ export const PATCH: RequestHandler = async ({request, params}) => {
         id: crypto.randomUUID(),
         desc: todo_to_add,
         done: false,
-        category: null,
+        category: category || null,
         time_created: Date.now(),
         time_updated: Date.now(), 
       }};
@@ -28,5 +28,7 @@ export const PATCH: RequestHandler = async ({request, params}) => {
       };
       result = await db.collection("user").updateOne({email: user.email, "todos.id": mark_done}, update)
     }
-    return new Response(EJSON.serialize(result));
+    return new Response(EJSON.stringify(result), {
+      headers: { 'Content-Type': 'application/json' }
+    });
 };

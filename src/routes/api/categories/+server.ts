@@ -28,30 +28,34 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	const update = {} as any;
 	update['$push'] = { 'created_categories': category };
 
+	// Leverages MongoDB insert failure to provide error messages.
 	const result = await users.updateOne(
-		{ email: locals.user.email },
-		update
+		{ email: locals.user.email, 'created_categories.name': { $ne: trimmed } },
+		update,
+		{ collation: { locale: 'en', strength: 2 } }
 	);
+	if (result.matchedCount === 0) error(409, `A category named "${trimmed}" already exists`);
+
 	return new Response(EJSON.stringify({ result, category }), {
 		headers: { 'Content-Type': 'application/json' }
 	});
 };
 
 export const DELETE: RequestHandler = async ({ request, locals }) => {
-	const { id } = await request.json();
-	if (typeof id !== 'string') error(400, 'Category ID required');
+	const { name } = await request.json();
+	if (typeof name !== 'string' || !name) error(400, 'Category Name required');
 
 	const update = {} as any;
-	update['$pull'] = { 'created_categories': { id } };
+	update['$pull'] = { 'created_categories': { name } };
 	await users.updateOne(
 		{ email: locals.user.email },
 		update
 	);
 
 	const result = await users.updateOne(
-		{ email: locals.user.email, 'todos.category': id },
+		{ email: locals.user.email, 'todos.category': name },
 		{ $set: { 'todos.$[t].category': null, 'todos.$[t].time_updated': Date.now() } },
-		{ arrayFilters: [{ 't.category': id }] }
+		{ arrayFilters: [{ 't.category': name }] }
 	);
 
 	return new Response(EJSON.stringify(result), {

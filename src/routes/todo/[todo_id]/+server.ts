@@ -20,5 +20,7 @@ export const PATCH: RequestHandler = async ({request, params}) => {
     };
   }
   const result = await db.collection("user").updateOne({email: user.email, "todos.id": todo_id}, update);
-  return new Response(EJSON.serialize(result));
+  return new Response(EJSON.stringify(result), {
+    headers: { 'Content-Type': 'application/json' }
+  });
 };

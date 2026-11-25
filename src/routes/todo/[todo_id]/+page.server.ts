@@ -8,10 +8,11 @@ export const load: PageServerLoad = async ({ params }) => {
     const { todo_id } = params;
     const event = getRequestEvent();
     const user = event.locals.user;
-    const foundUser = await db.collection("user").findOne({email: user.email})
+    const foundUser = await db.collection("user").findOne({email: user.email});
     if (foundUser) {
-      const todos = foundUser.todos.filter((todo: {id: String}) => todo.id === todo_id)
-      return {todos:EJSON.serialize(todos[0])}
+      const todos = foundUser.todos.filter((todo: {id: String}) => todo.id === todo_id);
+      const categories = foundUser.created_categories;
+      return {todos:EJSON.serialize(todos[0]), categories: EJSON.serialize(categories)}
     } else {
       error(404, 'Not found');
     }
