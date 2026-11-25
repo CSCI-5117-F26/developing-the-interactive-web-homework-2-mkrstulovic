@@ -1,8 +1,8 @@
 <script lang="ts">
   import { authClient } from "#lib/auth.client.ts";
-	import { goto, refreshAll } from "$app/navigation";
-	import { resolve } from "$app/paths";
+	import { refreshAll } from "$app/navigation";
   import CategoryFilter from "#lib/CategoryFilter.svelte";
+	import SignOut from "#lib/SignOut.svelte";
   let catFilter: CategoryFilter;
   const session = authClient.useSession();
   const { data, params } = $props();
@@ -31,15 +31,8 @@
   }
 </script>
 
-<button onclick={async () => await authClient.signOut({
-  fetchOptions: {
-    onSuccess: () => {
-      goto(resolve('/'));
-    },
-  },
-})}>
-  Sign Out
-</button> 
+<SignOut />
+
 <h1>TODOS</h1>
 <h2>Hello {$session?.data?.user?.name}</h2>
 <a href="/done">See Completed To-Do Items</a>
