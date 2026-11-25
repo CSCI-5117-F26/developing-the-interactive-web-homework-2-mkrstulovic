@@ -26,10 +26,10 @@
 <button
 onclick={async () => {
   await authClient.signUp.email({name, email, password}, {
-        onSuccess: (ctx) => {
-          goto(resolve('/todos'));
+        onSuccess: (ctx: any) => {
+          goto(resolve('/todos', {}));
         },
-        onError: (ctx) => {
+        onError: (ctx: any) => {
             // display the error message
             alert(ctx.error.message);
         } })
@@ -44,10 +44,10 @@ onclick={async () => {
 <button
 onclick={async () => {
   await authClient.signIn.email({email, password}, {
-        onSuccess: (ctx) => {
-          goto(resolve('/todos'));
+        onSuccess: (ctx: any) => {
+          goto(resolve('/todos', {}));
         },
-        onError: (ctx) => {
+        onError: (ctx: any) => {
             // display the error message
             alert(ctx.error.message);
         }

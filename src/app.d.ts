@@ -4,12 +4,11 @@ declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
+			session?: import('better-auth').Session;
 			user: {
 				id: string;
 				name: string;
 				email: string;
-				created_categories: Category[];
-				todos: Todo[];
 				// add other user fields here
 			};
 		}
