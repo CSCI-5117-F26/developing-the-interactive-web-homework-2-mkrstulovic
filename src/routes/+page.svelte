@@ -27,7 +27,7 @@
 onclick={async () => {
   await authClient.signUp.email({name, email, password}, {
         onSuccess: (ctx: any) => {
-          goto(resolve('/todos', {}));
+          goto(resolve('/todos'));
         },
         onError: (ctx: any) => {
             // display the error message
@@ -45,7 +45,7 @@ onclick={async () => {
 onclick={async () => {
   await authClient.signIn.email({email, password}, {
         onSuccess: (ctx: any) => {
-          goto(resolve('/todos', {}));
+          goto(resolve('/todos'));
         },
         onError: (ctx: any) => {
             // display the error message
